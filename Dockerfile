@@ -1,5 +1,5 @@
-# Usar imagen oficial de PHP con FPM y Composer
-FROM php:8.2-fpm
+# Usar imagen oficial de PHP con CLI
+FROM php:8.2-cli
 
 # Instalar extensiones necesarias
 RUN apt-get update && apt-get install -y \
@@ -20,8 +20,8 @@ RUN composer install --no-dev --optimize-autoloader
 COPY .env.example .env
 RUN php artisan key:generate
 
-# Exponer puerto para Laravel
-EXPOSE 9000
+# Exponer puerto (Render asignará $PORT en runtime)
+EXPOSE 8080
 
-# Comando para iniciar Laravel
-CMD ["php-fpm"]
+# Arrancar Laravel en el puerto dinámico
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=${PORT}"]
